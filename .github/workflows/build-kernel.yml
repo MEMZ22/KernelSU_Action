@@ -248,6 +248,13 @@ jobs:
       run: |
        cd $GITHUB_WORKSPACE/kernel_workspace/android-kernel
        make O=out ARCH=${{ env.ARCH }} vendor/sm8150_defconfig
+       cd $GITHUB_WORKSPACE/kernel_workspace/android-kernel
+       echo "CONFIG_EFI_STUB=n" >> arch/arm64/configs/vendor/xiaomi/raphael.config
+       echo "# CONFIG_MSM_BUS_EVENT is not set" >> arch/arm64/configs/vendor/xiaomi/raphael.config
+       echo "# CONFIG_MSM_BUS_SCALING is not set" >> arch/arm64/configs/vendor/xiaomi/raphael.config
+       echo "# CONFIG_MSM_BUSPM_DEV is not set" >> arch/arm64/configs/vendor/xiaomi/raphael.config
+       echo "# CONFIG_SND_SOC_MSM_ELLIPTIC is not set" >> arch/arm64/configs/vendor/xiaomi/raphael.config
+
        cat arch/${{ env.ARCH }}/configs/vendor/xiaomi/raphael.config >> out/.config
        make O=out ARCH=${{ env.ARCH }} olddefconfig
 
