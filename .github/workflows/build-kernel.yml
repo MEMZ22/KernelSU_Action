@@ -247,15 +247,15 @@ jobs:
     - name: Merge raphael.config into .config
       run: |
        cd $GITHUB_WORKSPACE/kernel_workspace/android-kernel
-       echo "CONFIG_EFI_STUB=n"                       >> $GITHUB_WORKSPACE/kernel_workspace/android-kernel/arch/${{ env.ARCH }}/configs/vendor/raphael.config
-       echo "# CONFIG_MSM_BUS_EVENT is not set"       >> $GITHUB_WORKSPACE/kernel_workspace/android-kernel/arch/${{ env.ARCH }}/configs/vendor/raphael.config
-       echo "# CONFIG_MSM_BUS_SCALING is not set"     >> $GITHUB_WORKSPACE/kernel_workspace/android-kernel/arch/${{ env.ARCH }}/configs/vendor/raphael.config
-       echo "# CONFIG_MSM_BUSPM_DEV is not set"       >> $GITHUB_WORKSPACE/kernel_workspace/android-kernel/arch/${{ env.ARCH }}/configs/vendor/raphael.config
-       echo "# CONFIG_SND_SOC_MSM_ELLIPTIC is not set" >> $GITHUB_WORKSPACE/kernel_workspace/android-kernel/arch/${{ env.ARCH }}/configs/vendor/raphael.config
        make O=out ARCH=${{ env.ARCH }} vendor/sm8150_defconfig
        cat arch/${{ env.ARCH }}/configs/vendor/xiaomi/raphael.config >> out/.config
+       # 直接修正 .config 中的错误项
+       sed -i 's/CONFIG_EFI_STUB=y/CONFIG_EFI_STUB=n/' out/.config
+       sed -i 's/CONFIG_MSM_BUS_EVENT=y/# CONFIG_MSM_BUS_EVENT is not set/' out/.config
+       sed -i 's/CONFIG_MSM_BUS_SCALING=y/# CONFIG_MSM_BUS_SCALING is not set/' out/.config
+       sed -i 's/CONFIG_MSM_BUSPM_DEV=y/# CONFIG_MSM_BUSPM_DEV is not set/' out/.config
+       sed -i 's/CONFIG_SND_SOC_MSM_ELLIPTIC=y/# CONFIG_SND_SOC_MSM_ELLIPTIC is not set/' out/.config
        make O=out ARCH=${{ env.ARCH }} olddefconfig
-
     - name: Build kernel
       run: |
         cd $GITHUB_WORKSPACE/kernel_workspace/android-kernel
