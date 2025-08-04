@@ -244,6 +244,12 @@ jobs:
       with:
         key: build-kernel-${{ env.DEVICE }}${{ env.LOCALVERSION }}${{ env.UPLOADNAME }}
         max-size: 2G
+    - name: Merge raphael.config into .config
+      run: |
+       cd $GITHUB_WORKSPACE/kernel_workspace/android-kernel
+       make O=out ARCH=${{ env.ARCH }} vendor/sm8150_defconfig
+       cat arch/${{ env.ARCH }}/configs/vendor/xiaomi/raphael.config >> out/.config
+       make O=out ARCH=${{ env.ARCH }} olddefconfig
 
     - name: Build kernel
       run: |
